@@ -143,9 +143,13 @@ public class LocationSearchActivity extends AppCompatActivity {
                 public void run() {
 
                     if (flag) {
-                        Intent intent = new Intent(getApplicationContext(), LocationResultPresent.class);
-                        intent.putExtra("result", result);
-                        startActivityForResult(intent, Constants.REQUEST_CODE_LOCATION_RESULT_PRESENT);
+                        if (!result.contains("\"total_count\":1")){ // 결과 값이 없으면
+                            Toast.makeText(getApplicationContext(),"결과 값이 없습니다. 키워드를 확인해 주세요",Toast.LENGTH_LONG).show();
+                        } else {
+                            Intent intent = new Intent(getApplicationContext(), LocationResultPresent.class);
+                            intent.putExtra("result", result);
+                            startActivityForResult(intent, Constants.REQUEST_CODE_LOCATION_RESULT_PRESENT);
+                        }
                     } else{
                         Toast.makeText(getApplicationContext(),"키워드를 입력해주세요",Toast.LENGTH_LONG).show();
                     }
