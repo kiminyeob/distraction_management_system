@@ -44,11 +44,11 @@ public class MainActivity extends AppCompatActivity implements AutoPermissionsLi
 
     @Override
     public void onDenied(int i, String[] permissions) {
-        Toast.makeText(this,"permission denied : "+permissions.length, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"permission denied : "+permissions.length, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onGranted(int i, String[] permissions) {
-        Toast.makeText(this,"permission granted : " + permissions.length, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"permission granted : " + permissions.length, Toast.LENGTH_LONG).show();
     }
 }
