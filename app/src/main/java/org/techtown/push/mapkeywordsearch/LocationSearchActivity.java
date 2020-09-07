@@ -36,21 +36,15 @@ public class LocationSearchActivity extends AppCompatActivity {
 
     Handler handler = new Handler();
     Button button;
-    //Button button2;
     EditText editText;
-    //TextView textView;
-
     SupportMapFragment mapFragment;
     GoogleMap map;
-
     MarkerOptions myLocationMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
-
-        //textView = findViewById(R.id.textViewInfo);
         editText = findViewById(R.id.editText);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -69,9 +63,8 @@ public class LocationSearchActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // REST API를 통해 검색 결과를 가져오는 메서드 출력
         button = findViewById(R.id.button);
-        //button2 = findViewById(R.id.button2);
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,16 +72,6 @@ public class LocationSearchActivity extends AppCompatActivity {
             thread.start();
             }
         });
-
-        /*
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //textView.setText("");
-            }
-        });
-
-         */
 
         startLocationService();
     }
@@ -128,8 +111,6 @@ public class LocationSearchActivity extends AppCompatActivity {
     }
 
     public void startLocationService(){
-        //double latitude=37.566499;
-        //double longitude=126.977934;
 
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -138,8 +119,10 @@ public class LocationSearchActivity extends AppCompatActivity {
             if(location != null){
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-//                String message = "최근 나의 위치 -> Latitude : "+latitude+", longitude: "+longitude;
-//                textView.setText(message);
+                String message = "최근 나의 위치 -> Latitude : "+latitude+", longitude: "+longitude;
+                Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+            } else{
+                Toast.makeText(getApplicationContext(),"최근 위치를 가져오지 못했습니다.",Toast.LENGTH_LONG).show();
             }
 
             GPSListener gpsListener = new GPSListener();
@@ -151,8 +134,6 @@ public class LocationSearchActivity extends AppCompatActivity {
         } catch (SecurityException e){
             e.printStackTrace();
         }
-//        LatLng curPoint = new LatLng(latitude, longitude);
-//        map.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 15));
     }
 
     // 카카오 맵에서 위치 정보를 가져오는 코드
@@ -185,20 +166,17 @@ public class LocationSearchActivity extends AppCompatActivity {
         String result = "";
         boolean flag;
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // 대전 시청 위치를 default로
         String latitude = "127.384776";
         String longitude = "36.350642";
 
-        //경도와 위도는 북위 37도, 동경 127도이다.
-
         public void run(){
-
             try {
                 @SuppressLint("MissingPermission") Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (location != null) {
                     latitude = Double.toString(location.getLatitude());
                     longitude = Double.toString(location.getLongitude());
-//                String message = "최근 나의 위치 -> Latitude : "+latitude+", longitude: "+longitude;
-//                textView.setText(message);
                 }
             }catch (SecurityException e){
                 e.printStackTrace();
@@ -218,12 +196,11 @@ public class LocationSearchActivity extends AppCompatActivity {
 
                     InputStream is = conn.getInputStream();
 
-                    InputStreamReader responseBodyReader = new InputStreamReader(is, "UTF-8");
-
                     //Get the stream
                     StringBuilder builder = new StringBuilder();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                     String line;
+
                     while ((line = reader.readLine()) != null) {
                         builder.append(line);
                     }
@@ -240,7 +217,7 @@ public class LocationSearchActivity extends AppCompatActivity {
                 flag = false;
             }
 
-
+            // 검색 결과가 있으면 LocationResultPresent Activity 에서 결과를 출력한다.
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -286,6 +263,7 @@ public class LocationSearchActivity extends AppCompatActivity {
 
         }
 
+        // 위도, 경도 위치로 지도로 이동
         private void showCurrentLocation(Double latitude, Double longitude){
             LatLng curPoint = new LatLng(latitude, longitude);
             map.animateCamera(CameraUpdateFactory.newLatLng(curPoint));
@@ -301,5 +279,4 @@ public class LocationSearchActivity extends AppCompatActivity {
         myLocationMarker.snippet("GPS로 확인한 위치");
         map.addMarker(myLocationMarker);
     }
-
 }
