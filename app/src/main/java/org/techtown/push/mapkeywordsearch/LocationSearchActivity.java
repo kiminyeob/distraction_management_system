@@ -11,7 +11,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,7 +39,10 @@ public class LocationSearchActivity extends AppCompatActivity {
     // user input 및 출력 관련 view
     Button button;
     EditText editText;
-    TextView textView;
+    TextView textView_placeName;
+    TextView textView_latitude;
+    TextView textView_longitude;
+    TextView textView_distance;
 
     //지도 관련 view
     SupportMapFragment mapFragment;
@@ -52,7 +54,10 @@ public class LocationSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
         editText = findViewById(R.id.editText);
-        textView = findViewById(R.id.textView);
+        textView_placeName = findViewById(R.id.locationName);
+        textView_latitude = findViewById(R.id.latitude);
+        textView_longitude = findViewById(R.id.longitude);
+        textView_distance = findViewById(R.id.distance);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -115,7 +120,9 @@ public class LocationSearchActivity extends AppCompatActivity {
                 LatLng curPoint = new LatLng(Double.parseDouble(y_), Double.parseDouble(x_));
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 15));
                 showLocationMarker(curPoint, locationName);
-                textView.setText("장소이름: "+locationName+", latitude: "+y_+", longitude: "+x_);
+                textView_placeName.setText(locationName);
+                textView_latitude.setText(y_);
+                textView_longitude.setText(x_);
             }
         }
     }
@@ -241,6 +248,7 @@ public class LocationSearchActivity extends AppCompatActivity {
             Double longitude = location.getLongitude();
 
             // showCurrentLocation(latitude, longitude);
+            getDistance(latitude, longitude);
         }
 
         @Override
@@ -263,6 +271,26 @@ public class LocationSearchActivity extends AppCompatActivity {
             LatLng curPoint = new LatLng(latitude, longitude);
             map.animateCamera(CameraUpdateFactory.newLatLng(curPoint));
         }
+
+        // 거리 계산 메서드
+        public double getDistance(double lat , double lng){
+            double distance;
+            Location locationA = new Location("point A");
+            locationA.setLatitude(lat);
+            locationA.setLongitude(lng);
+
+            Location locationB = new Location("point B");
+            locationB.setLatitude(Double.parseDouble(textView_latitude.getText().toString()));
+            locationB.setLongitude(Double.parseDouble(textView_longitude.getText().toString()));
+
+            distance = locationA.distanceTo(locationB);
+
+            textView_distance.setText("선택한 위치와 현재 나와의 거리:"+Double.toString(distance)+"m");
+
+            return distance;
+        }
+
+
     }
 
     // 지도 상에 marker를 표시한다.
