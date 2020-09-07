@@ -9,20 +9,16 @@ package org.techtown.push.mapkeywordsearch;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class LocationResultPresent extends AppCompatActivity {
@@ -38,16 +34,17 @@ public class LocationResultPresent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_result_present);
 
-        Intent intent = getIntent(); // Location Search Activity 에서 받은 intent 받기
+        // Location Search Activity 에서 받은 intent 받기
+        Intent intent = getIntent();
         result = intent.getStringExtra("result");
 
-        locations = processingResult(result); // Parsing 후에 결과 값을 저장한다.
+        // Parsing 후에 결과 값을 저장한다.
+        locations = processingResult(result);
 
         listView= findViewById(R.id.listView);
         adapter = new LocationAdapter();
 
         for (LocationInformation location:locations){
-
             //결과로 받아온 장소 정보를 listView에 추가한다.
             adapter.addItem(new LocationInformation(location.getPlace_name(),
                     location.getAddress_name(),
@@ -65,7 +62,7 @@ public class LocationResultPresent extends AppCompatActivity {
                 LocationInformation location = (LocationInformation) adapter.getItem(i); // listview에 저장된 item을 index 값으로 가져온다.
                 Toast.makeText(getApplicationContext(), "선택된 장소: "+location.getPlace_name(), Toast.LENGTH_LONG).show();
 
-                //x값과 y값을 Location Search Activity로 되돌려 보낸다.
+                //x값과 y값을 Location Search Activity 로 되돌려 보낸다. 현재 activity는 종료함(destroy)
                 Intent intent = new Intent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|
                         Intent.FLAG_ACTIVITY_SINGLE_TOP|
@@ -79,12 +76,7 @@ public class LocationResultPresent extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("destroy","activity 사망");
-    }
-
+    // JSON 포맷으로 되어 있는 문자열 결과 값을 JSON parser 를 통해 파싱
     public ArrayList processingResult(String data){
 
         ArrayList<LocationInformation> locations = new ArrayList<LocationInformation>();
@@ -93,7 +85,6 @@ public class LocationResultPresent extends AppCompatActivity {
             JSONObject jsonObject = new JSONObject(data);
             String location_info = jsonObject.getString("documents");
             JSONArray jsonArray = new JSONArray(location_info);
-            //resultArray = new String[jsonArray.length()];
 
             for (int i=0; i < jsonArray.length(); i++) {
                 JSONObject subJsonObject = jsonArray.getJSONObject(i);
