@@ -35,25 +35,10 @@
             android:text="지우기" />
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/scrollview"
+    <fragment
+        android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:saveEnabled="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:padding="10dp" />
-
-        </LinearLayout>
-    </ScrollView>
+        class="com.google.android.gms.maps.SupportMapFragment"/>
 
 </LinearLayout>
