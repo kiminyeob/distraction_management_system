@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -283,13 +284,17 @@ public class LocationSearchActivity extends AppCompatActivity {
             locationB.setLatitude(Double.parseDouble(textView_latitude.getText().toString()));
             locationB.setLongitude(Double.parseDouble(textView_longitude.getText().toString()));
 
-            distance = Math.round(locationA.distanceTo(locationB)*100);
+            distance = Math.round(locationA.distanceTo(locationB)*100)/100.0;
 
-            textView_distance.setText("선택한 위치와 현재 나와의 거리:"+(Double.toString(distance))+"m");
+
 
             // 사용자의 위치와 지정된 위치가 일정 거리 이하이면 특정 액션이 수행되는 샘플 코드
-            if(distance < 100){
-                Toast.makeText(getApplicationContext(), "100M 미만! 액션이 Trigger됩니다", Toast.LENGTH_LONG).show();
+            if(distance > 50){
+                textView_distance.setTextColor(Color.BLACK);
+                textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m");
+            } else {
+                textView_distance.setTextColor(Color.RED);
+                textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션이 트리거 됩니다!");
             }
 
             return distance;
