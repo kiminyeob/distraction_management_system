@@ -2,7 +2,7 @@ package org.techtown.push.mapkeywordsearch; // app package name
 
 /*
 
-Location 객체를 저장할 수 있는 Class
+Location 객체에 Class
 
  */
 
