@@ -1,9 +1,13 @@
 package org.techtown.push.mapkeywordsearch;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -13,29 +17,53 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.pedro.library.AutoPermissions;
+import com.pedro.library.AutoPermissionsListener;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class LocationSearchActivity extends AppCompatActivity {
+public class LocationSearchActivity extends AppCompatActivity implements AutoPermissionsListener {
 
     Handler handler = new Handler();
-    ScrollView scrollView;
     Button button;
     Button button2;
     EditText editText;
     TextView textView;
+
+    SupportMapFragment mapFragment;
+    GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
 
-        editText = findViewById(R.id.editText);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                map=googleMap;
+            }
+        });
+
+        try{
+            MapsInitializer.initialize(this);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        startLocationService();
+
         textView = findViewById(R.id.textView);
-        scrollView = findViewById(R.id.scrollview);
+        editText = findViewById(R.id.editText);
 
         button = findViewById(R.id.button);
         button2 = findViewById(R.id.button2);
@@ -51,9 +79,11 @@ public class LocationSearchActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textView.setText("");
+                //textView.setText("");
             }
         });
+
+        AutoPermissions.Companion.loadAllPermissions(this,101);
     }
 
     @Override
@@ -64,9 +94,49 @@ public class LocationSearchActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK){
                 String x_ = data.getStringExtra("x");
                 String y_ = data.getStringExtra("y");
-                textView.setText("x좌표: "+x_+", y좌표: "+y_);
+                //textView.setText("x좌표: "+x_+", y좌표: "+y_);
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        AutoPermissions.Companion.parsePermissions(this, requestCode,permissions, this);
+    }
+
+    @Override
+    public void onDenied(int i, String[] permissions) {
+        Toast.makeText(this,"permission denied : "+permissions.length, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onGranted(int i, String[] permissions) {
+        Toast.makeText(this,"permission granted : " + permissions.length, Toast.LENGTH_LONG).show();
+    }
+
+    public void startLocationService(){
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        try{
+            Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(location != null){
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                String message = "최근 위치 -> Latitude : "+latitude+", longitude: "+longitude;
+                textView.setText(message);
+            }
+
+            GPSListener gpsListener = new GPSListener();
+            long minTime = 10000;
+            float minDistance = 0;
+
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, gpsListener);
+
+        } catch (SecurityException e){
+            e.printStackTrace();
+        }
+
     }
 
     class BackgroundThreadKaKaoMap extends Thread {
