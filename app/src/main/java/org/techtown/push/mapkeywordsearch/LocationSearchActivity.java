@@ -37,6 +37,7 @@ public class LocationSearchActivity extends AppCompatActivity {
     Handler handler = new Handler();
     Button button;
     EditText editText;
+    TextView textView;
     SupportMapFragment mapFragment;
     GoogleMap map;
     MarkerOptions myLocationMarker;
@@ -46,6 +47,7 @@ public class LocationSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
         editText = findViewById(R.id.editText);
+        textView = findViewById(R.id.textView);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -106,6 +108,7 @@ public class LocationSearchActivity extends AppCompatActivity {
                 LatLng curPoint = new LatLng(Double.parseDouble(y_), Double.parseDouble(x_));
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 15));
                 showLocationMarker(curPoint, locationName);
+                textView.setText("장소이름: "+locationName+", latitude: "+y_+", longitude: "+x_);
             }
         }
     }
