@@ -21,8 +21,6 @@ import java.net.URL;
 
 public class LocationSearchActivity extends AppCompatActivity {
 
-    public static final int REQUEST_CODE_LOCATION_RESULT_PRESENT = 101;
-
     Handler handler = new Handler();
     ScrollView scrollView;
     Button button;
@@ -62,7 +60,7 @@ public class LocationSearchActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_CODE_LOCATION_RESULT_PRESENT){
+        if(requestCode == Constants.REQUEST_CODE_LOCATION_RESULT_PRESENT){
             if (resultCode == RESULT_OK){
                 String x_ = data.getStringExtra("x");
                 String y_ = data.getStringExtra("y");
@@ -99,12 +97,13 @@ public class LocationSearchActivity extends AppCompatActivity {
 
         String keyword = editText.getText().toString();
         String result = "";
+        boolean flag;
 
         public void run(){
 
             String url_address = "https://dapi.kakao.com/v2/local/search/keyword.json?page=1&size=15&sort=distance&query="+keyword+"&x=0&y=0";
 
-            if (keyword != "") {
+            if (keyword.compareTo("") != 0) { // 키워드가 비워져 있지 않으면
 
                 try {
                     URL url = new URL(url_address);
@@ -129,22 +128,27 @@ public class LocationSearchActivity extends AppCompatActivity {
                     // Set the result
                     result = builder.toString();
 
+                    flag = true;
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                flag = false;
             }
+
 
             handler.post(new Runnable() {
                 @Override
                 public void run() {
 
-                    //Log.d("test",result);
-                    //textView.setText(result);
-
-                    Intent intent = new Intent(getApplicationContext(), LocationResultPresent.class);
-                    intent.putExtra("result",result);
-                    startActivityForResult(intent, REQUEST_CODE_LOCATION_RESULT_PRESENT);
-
+                    if (flag) {
+                        Intent intent = new Intent(getApplicationContext(), LocationResultPresent.class);
+                        intent.putExtra("result", result);
+                        startActivityForResult(intent, Constants.REQUEST_CODE_LOCATION_RESULT_PRESENT);
+                    } else{
+                        Toast.makeText(getApplicationContext(),"키워드를 입력해주세요",Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }

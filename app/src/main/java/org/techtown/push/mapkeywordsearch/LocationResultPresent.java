@@ -1,3 +1,10 @@
+/*
+
+Location 검색 결과를 present하는 "Activity" 이다.
+Location Search Activity에서 검색 결과 값을 String (JSON형식)으로 가져와서 Parsing 한다.
+
+*/
+
 package org.techtown.push.mapkeywordsearch;
 
 import android.content.Intent;
@@ -6,10 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,11 +27,10 @@ import java.util.ArrayList;
 
 public class LocationResultPresent extends AppCompatActivity {
 
-    //TextView textView;
-    String result;
+    String result; // 검색 결과 값을 저장하는 변수
+
     ListView listView;
     LocationAdapter adapter;
-    //String[] locationResult;
     ArrayList<LocationInformation> locations;
 
     @Override
@@ -34,18 +38,17 @@ public class LocationResultPresent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_result_present);
 
-        //textView = findViewById(R.id.textView3);
-
         Intent intent = getIntent(); // Location Search Activity 에서 받은 intent 받기
         result = intent.getStringExtra("result");
 
-        locations = processingResult(result);
+        locations = processingResult(result); // Parsing 후에 결과 값을 저장한다.
 
-        listView=(ListView)findViewById(R.id.listView);
+        listView= findViewById(R.id.listView);
         adapter = new LocationAdapter();
 
         for (LocationInformation location:locations){
-            //Log.d("result in onCreate",location.getAddress_name());
+
+            //결과로 받아온 장소 정보를 listView에 추가한다.
             adapter.addItem(new LocationInformation(location.getPlace_name(),
                     location.getAddress_name(),
                     location.getRoad_address_name(),
@@ -54,12 +57,15 @@ public class LocationResultPresent extends AppCompatActivity {
         }
 
         listView.setAdapter(adapter);
+
+        // itemView touch 할 때 처리
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                LocationInformation location = (LocationInformation) adapter.getItem(i);
+                LocationInformation location = (LocationInformation) adapter.getItem(i); // listview에 저장된 item을 index 값으로 가져온다.
                 Toast.makeText(getApplicationContext(), "선택된 장소: "+location.getPlace_name(), Toast.LENGTH_LONG).show();
 
+                //x값과 y값을 Location Search Activity로 되돌려 보낸다.
                 Intent intent = new Intent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|
                         Intent.FLAG_ACTIVITY_SINGLE_TOP|
@@ -73,21 +79,12 @@ public class LocationResultPresent extends AppCompatActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) { // 이미 만들어진 상태라면...!
-        //processIntent(intent);
-        super.onNewIntent(intent);
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("destroy","activity 사망");
     }
 
     public ArrayList processingResult(String data){
-
-        /*
-        String place_name;
-        String address_name;
-        String road_address_name;
-        String x;
-        String y;
-        String[] resultArray;
-         */
 
         ArrayList<LocationInformation> locations = new ArrayList<LocationInformation>();
 
@@ -106,11 +103,8 @@ public class LocationResultPresent extends AppCompatActivity {
                 String x = subJsonObject.getString("x");
                 String y = subJsonObject.getString("y");
 
-                // LocationInformationClass 객체를 저장한다.
                 locations.add(new LocationInformation(place_name,address_name,road_address_name,x,y));
 
-                //resultArray[i] = place_name +","+address_name+","+road_address_name+","+x+","+y;
-                //Log.d("result",resultArray[i]);
             }
         } catch (JSONException e){
             e.printStackTrace();
