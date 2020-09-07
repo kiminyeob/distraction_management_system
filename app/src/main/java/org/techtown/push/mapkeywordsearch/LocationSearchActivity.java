@@ -287,6 +287,10 @@ public class LocationSearchActivity extends AppCompatActivity {
 
             textView_distance.setText("선택한 위치와 현재 나와의 거리:"+Double.toString(distance)+"m");
 
+            if(distance < 100){
+                Toast.makeText(getApplicationContext(), "100M 미만! 액션이 Trigger됩니다", Toast.LENGTH_LONG).show();
+            }
+
             return distance;
         }
 
