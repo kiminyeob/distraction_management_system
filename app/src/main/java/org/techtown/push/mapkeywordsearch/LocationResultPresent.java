@@ -72,6 +72,7 @@ public class LocationResultPresent extends AppCompatActivity {
                         Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("x",location.getX());
                 intent.putExtra("y",location.getY());
+                intent.putExtra("locationName", location.getPlace_name());
                 setResult(RESULT_OK, intent);
                 finish();
             }
