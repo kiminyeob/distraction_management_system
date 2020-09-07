@@ -283,9 +283,9 @@ public class LocationSearchActivity extends AppCompatActivity {
             locationB.setLatitude(Double.parseDouble(textView_latitude.getText().toString()));
             locationB.setLongitude(Double.parseDouble(textView_longitude.getText().toString()));
 
-            distance = locationA.distanceTo(locationB);
+            distance = Math.round(locationA.distanceTo(locationB)*100);
 
-            textView_distance.setText("선택한 위치와 현재 나와의 거리:"+Double.toString(distance)+"m");
+            textView_distance.setText("선택한 위치와 현재 나와의 거리:"+(Double.toString(distance))+"m");
 
             // 사용자의 위치와 지정된 위치가 일정 거리 이하이면 특정 액션이 수행되는 샘플 코드
             if(distance < 100){

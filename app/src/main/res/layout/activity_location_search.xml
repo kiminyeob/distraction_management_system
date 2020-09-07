@@ -40,6 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingStart="10dp"
             android:text="장소이름" />
 
         <TextView
@@ -66,7 +67,8 @@
             android:id="@+id/locationName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:paddingStart="10dp" />
 
         <TextView
             android:id="@+id/latitude"
@@ -84,7 +86,8 @@
     <TextView
         android:id="@+id/distance"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp" />
 
     <fragment
         android:id="@+id/map"
