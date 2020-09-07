@@ -118,6 +118,7 @@ public class LocationSearchActivity extends AppCompatActivity implements AutoPer
     public void startLocationService(){
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+
         try{
             Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if(location != null){
