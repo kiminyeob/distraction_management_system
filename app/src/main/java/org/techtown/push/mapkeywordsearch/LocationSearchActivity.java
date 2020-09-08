@@ -249,6 +249,8 @@ public class LocationSearchActivity extends AppCompatActivity {
             Double longitude = location.getLongitude();
 
             // showCurrentLocation(latitude, longitude);
+
+            // 검색된 location이 없을 때만 distance를 구함(if 문을 넣지 않으면 null exception 출력됨)
             if (textView_placeName.getText().toString()!="")
                 getDistance(latitude, longitude);
         }
