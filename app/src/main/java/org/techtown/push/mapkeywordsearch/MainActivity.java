@@ -3,6 +3,8 @@ package org.techtown.push.mapkeywordsearch;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -33,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements AutoPermissionsLi
         });
 
         AutoPermissions.Companion.loadAllPermissions(this,101);
+
+        //방해금지 설정 변경 설정 권한 부여
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+            startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+        }
     }
 
     // 권한 받는 코드

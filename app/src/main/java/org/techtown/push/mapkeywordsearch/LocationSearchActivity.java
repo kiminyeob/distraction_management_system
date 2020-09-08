@@ -280,6 +280,8 @@ public class LocationSearchActivity extends AppCompatActivity {
         // 거리 계산 메서드
         public double getDistance(double lat , double lng){
             double distance;
+            AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
             Location locationA = new Location("point A");
             locationA.setLatitude(lat);
             locationA.setLongitude(lng);
@@ -301,7 +303,9 @@ public class LocationSearchActivity extends AppCompatActivity {
                 textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션이 트리거 됩니다!");
 
                 // action test
-                changeRingerModeAction(Constants.CHANGE_TO_MUTE);
+                if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT)
+                    changeRingerModeAction(Constants.CHANGE_TO_MUTE);
+
             }
 
             return distance;
