@@ -249,7 +249,8 @@ public class LocationSearchActivity extends AppCompatActivity {
             Double longitude = location.getLongitude();
 
             // showCurrentLocation(latitude, longitude);
-            getDistance(latitude, longitude);
+            if (textView_placeName.getText().toString()!="")
+                getDistance(latitude, longitude);
         }
 
         @Override
