@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -298,6 +299,9 @@ public class LocationSearchActivity extends AppCompatActivity {
             } else {
                 textView_distance.setTextColor(Color.RED);
                 textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션이 트리거 됩니다!");
+
+                // action test
+                changeRingerModeAction(Constants.CHANGE_TO_MUTE);
             }
 
             return distance;
@@ -315,5 +319,26 @@ public class LocationSearchActivity extends AppCompatActivity {
         myLocationMarker.title(locationName+"\n");
         myLocationMarker.snippet("GPS로 확인한 위치");
         map.addMarker(myLocationMarker);
+    }
+
+
+    // ringer mode change test functions
+    public void changeRingerModeAction(int mode){
+
+        AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
+        switch (mode){
+            case Constants.CHANGE_TO_MUTE:
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                break;
+
+            case Constants.CHANGE_TO_SOUND:
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                break;
+
+            case Constants.CHANGE_TO_VIBRATE:
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                break;
+        }
     }
 }
