@@ -15,15 +15,16 @@ import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
 
 public class MainActivity extends AppCompatActivity implements AutoPermissionsListener {
-    Button button;
+    Button button_location;
+    Button button_notification_filtering;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = findViewById(R.id.button3);
-        button.setOnClickListener(new View.OnClickListener() {
+        button_location = findViewById(R.id.button3);
+        button_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), LocationSearchActivity.class);
@@ -34,13 +35,19 @@ public class MainActivity extends AppCompatActivity implements AutoPermissionsLi
             }
         });
 
-        AutoPermissions.Companion.loadAllPermissions(this,101);
+        button_notification_filtering = findViewById(R.id.button_notification_filtering);
+        button_notification_filtering.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), NotificationFiltering.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP|
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(intent, Constants.REQUEST_CODE_NOTIFICATION_FILTERING_INTERFACE);
+            }
+        });
 
-        //방해금지 설정 변경 설정 권한 부여
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (!notificationManager.isNotificationPolicyAccessGranted()) {
-            startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
-        }
+        AutoPermissions.Companion.loadAllPermissions(this,101);
     }
 
     // 권한 받는 코드

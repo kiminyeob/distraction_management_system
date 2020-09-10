@@ -12,4 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Location" />
+
+    <Button
+        android:id="@+id/button_notification_filtering"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notification Filtering" />
 </LinearLayout>
