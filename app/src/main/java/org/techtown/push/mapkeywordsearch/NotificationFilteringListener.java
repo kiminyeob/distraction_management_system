@@ -10,6 +10,7 @@ import android.util.Log;
 /*
 
 구현해야 할 내용: keyword 나 app list를 설정하는 코드를 삽입해야 해야 함
+Blocking 하는 동안에는 "어떤 서비스" 가 돌면서 blocking 중이라는 표시를 해줘야 할 것 같음(FOCUS BOT처럼)
 
  */
 

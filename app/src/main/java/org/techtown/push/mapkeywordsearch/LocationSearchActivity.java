@@ -68,6 +68,33 @@ public class LocationSearchActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 map=googleMap;
                 map.setMyLocationEnabled(true);
+
+                // map을 touch했을 때, 좌표 정보를 textView에 display함
+                map.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
+                    @Override
+                    public void onMapClick(LatLng LatLng){
+                        // 소숫점 정리하기
+                        double latitude  = LatLng.latitude;
+                        double longitude = LatLng.longitude;
+
+                        textView_latitude.setText(Double.toString(latitude));
+                        textView_longitude.setText(Double.toString(longitude));
+                        textView_placeName.setText("");
+
+                        try {
+                            // 마지막으로 tracking 한 GPS 값을 가져온다.
+                            LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                            @SuppressLint("MissingPermission") Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            if (location != null) {
+                                double cur_latitude = location.getLatitude();
+                                double cur_longitude = location.getLongitude();
+                                getDistance(cur_latitude, cur_longitude);
+                            }
+                        }catch (SecurityException e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         });
 
@@ -276,42 +303,6 @@ public class LocationSearchActivity extends AppCompatActivity {
             LatLng curPoint = new LatLng(latitude, longitude);
             map.animateCamera(CameraUpdateFactory.newLatLng(curPoint));
         }
-
-        // 거리 계산 메서드
-        public double getDistance(double lat , double lng){
-            double distance;
-            AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-
-            Location locationA = new Location("point A");
-            locationA.setLatitude(lat);
-            locationA.setLongitude(lng);
-
-            Location locationB = new Location("point B");
-            locationB.setLatitude(Double.parseDouble(textView_latitude.getText().toString()));
-            locationB.setLongitude(Double.parseDouble(textView_longitude.getText().toString()));
-
-            distance = Math.round(locationA.distanceTo(locationB)*100)/100.0;
-
-
-
-            // 사용자의 위치와 지정된 위치가 일정 거리 이하이면 특정 액션이 수행되는 샘플 코드
-            if(distance > 50){
-                textView_distance.setTextColor(Color.BLACK);
-                textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m");
-            } else {
-                textView_distance.setTextColor(Color.RED);
-                textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션이 트리거 됩니다!");
-
-                // action test
-                if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT)
-                    changeRingerModeAction(Constants.CHANGE_TO_MUTE);
-
-            }
-
-            return distance;
-        }
-
-
     }
 
     // 지도 상에 marker를 표시한다.
@@ -325,6 +316,41 @@ public class LocationSearchActivity extends AppCompatActivity {
         map.addMarker(myLocationMarker);
     }
 
+    // 거리 계산 메서드
+    public double getDistance(double lat , double lng){
+        double distance;
+        //AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
+        Location locationA = new Location("point A");
+        locationA.setLatitude(lat);
+        locationA.setLongitude(lng);
+
+        // 현재 textView에 있는 값과 비교함
+        Location locationB = new Location("point B");
+        locationB.setLatitude(Double.parseDouble(textView_latitude.getText().toString()));
+        locationB.setLongitude(Double.parseDouble(textView_longitude.getText().toString()));
+
+        distance = Math.round(locationA.distanceTo(locationB)*100)/100.0;
+
+
+
+        // 사용자의 위치와 지정된 위치가 일정 거리 이하이면 특정 액션이 수행되는 샘플 코드
+        if(distance > 50){
+            textView_distance.setTextColor(Color.BLACK);
+            textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m");
+        } else {
+            textView_distance.setTextColor(Color.RED);
+            textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션이 트리거 됩니다!");
+
+            // action test
+                /*
+                if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT)
+                    changeRingerModeAction(Constants.CHANGE_TO_MUTE);
+
+                 */
+        }
+        return distance;
+    }
 
     // ringer mode change test functions
     public void changeRingerModeAction(int mode){
