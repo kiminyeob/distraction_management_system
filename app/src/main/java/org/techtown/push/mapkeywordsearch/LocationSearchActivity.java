@@ -78,11 +78,8 @@ public class LocationSearchActivity extends AppCompatActivity {
                         double longitude = LatLng.longitude;
                         LatLng curPoint = new LatLng(latitude, longitude);
 
-                        textView_latitude.setText(Double.toString(latitude));
-                        textView_longitude.setText(Double.toString(longitude));
-                        textView_placeName.setText("");
-
                         showLocationMarker(curPoint, "null");
+                        DisplayLocationInfo(latitude, longitude); // textView 에 표시
 
                         try {
                             // 마지막으로 tracking 한 GPS 값을 가져온다.
@@ -152,9 +149,7 @@ public class LocationSearchActivity extends AppCompatActivity {
                 LatLng curPoint = new LatLng(Double.parseDouble(y_), Double.parseDouble(x_));
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 15));
                 showLocationMarker(curPoint, locationName);
-                textView_placeName.setText(locationName);
-                textView_latitude.setText(y_);
-                textView_longitude.setText(x_);
+                DisplayLocationInfo(y_, x_, locationName);
             }
         }
     }
@@ -374,4 +369,29 @@ public class LocationSearchActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    public void DisplayLocationInfo(String lat, String lng){
+        textView_latitude.setText(lat);
+        textView_longitude.setText(lng);
+        textView_placeName.setText("");
+    }
+
+    public void DisplayLocationInfo(String lat, String lng, String placeName){
+        textView_latitude.setText(lat);
+        textView_longitude.setText(lng);
+        textView_placeName.setText(placeName);
+    }
+
+    public void DisplayLocationInfo(double lat, double lng){
+        textView_latitude.setText(Double.toString(lat));
+        textView_longitude.setText(Double.toString(lng));
+    }
+
+    public void DisplayLocationInfo(double lat, double lng, String placeName){
+        textView_latitude.setText(Double.toString(lat));
+        textView_longitude.setText(Double.toString(lng));
+        textView_placeName.setText(placeName);
+    }
+
+
 }
