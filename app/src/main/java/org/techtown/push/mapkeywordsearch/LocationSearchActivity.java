@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -23,7 +25,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -73,13 +78,19 @@ public class LocationSearchActivity extends AppCompatActivity {
                 map.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
                     @Override
                     public void onMapClick(LatLng LatLng){
-                        // 소숫점 정리하기
                         double latitude  = LatLng.latitude;
                         double longitude = LatLng.longitude;
                         LatLng curPoint = new LatLng(latitude, longitude);
 
                         showLocationMarker(curPoint, "null");
                         DisplayLocationInfo(latitude, longitude); // textView 에 표시
+
+                        Circle circle = map.addCircle(new CircleOptions()
+                                .center(curPoint)
+                                .radius(100.0)
+                                .strokeColor(Color.RED)
+                                .strokeWidth(1.0f)
+                                .fillColor(0x220000FF));
 
                         try {
                             // 마지막으로 tracking 한 GPS 값을 가져온다.
@@ -274,6 +285,7 @@ public class LocationSearchActivity extends AppCompatActivity {
             Double latitude = location.getLatitude();
             Double longitude = location.getLongitude();
 
+            // 현재 나의 위치로 camera를 이동 시킴
             // showCurrentLocation(latitude, longitude);
 
             // 검색된 location이 없을 때만 distance를 구함(if 문을 넣지 않으면 null exception 출력됨)
@@ -305,19 +317,24 @@ public class LocationSearchActivity extends AppCompatActivity {
 
     // 지도 상에 marker를 표시한다.
     private void showLocationMarker(LatLng curPoint, String locationName){
+        int height =100;
+        int width = 100;
+        Bitmap b = BitmapFactory.decodeResource(getResources(),R.drawable.mylocation);
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b,width,height,false);
+        BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
+
         map.clear();
-        myLocationMarker = new MarkerOptions();
-        myLocationMarker.position(curPoint);
-        myLocationMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.mylocation));
-        myLocationMarker.title(locationName+"\n");
-        myLocationMarker.snippet("GPS로 확인한 위치");
+        myLocationMarker = new MarkerOptions()
+                .position(curPoint)
+                .icon(smallMarkerIcon)
+                .title(locationName+"\n")
+                .snippet("GPS로 확인한 위치");
         map.addMarker(myLocationMarker);
     }
 
     // 거리 계산 메서드
     public double getDistance(double lat , double lng){
         double distance;
-        //AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
         Location locationA = new Location("point A");
         locationA.setLatitude(lat);
@@ -339,35 +356,8 @@ public class LocationSearchActivity extends AppCompatActivity {
         } else {
             textView_distance.setTextColor(Color.RED);
             textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션이 트리거 됩니다!");
-
-            // action test
-                /*
-                if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT)
-                    changeRingerModeAction(Constants.CHANGE_TO_MUTE);
-
-                 */
         }
         return distance;
-    }
-
-    // ringer mode change test functions
-    public void changeRingerModeAction(int mode){
-
-        AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-
-        switch (mode){
-            case Constants.CHANGE_TO_MUTE:
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                break;
-
-            case Constants.CHANGE_TO_SOUND:
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                break;
-
-            case Constants.CHANGE_TO_VIBRATE:
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                break;
-        }
     }
 
     public void DisplayLocationInfo(String lat, String lng){
