@@ -135,7 +135,7 @@ public class LocationSearchActivity extends AppCompatActivity {
                     LatLng markerLocation = new LatLng(latitude, longitude);
 
                     if (textView_placeName.getText().toString() == "")
-                        showLocationMarker(markerLocation, "", range);
+                        showLocationMarker(markerLocation, "null", range);
                     else
                         showLocationMarker(markerLocation, textView_placeName.getText().toString(), range);
                 }
