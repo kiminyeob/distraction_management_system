@@ -89,7 +89,7 @@ public class LocationSearchActivity extends AppCompatActivity {
                         LatLng curPoint = new LatLng(latitude, longitude);
 
                         showLocationMarker(curPoint, "null", sb.getProgress());
-                        DisplayLocationInfo(latitude, longitude); // textView 에 표시
+                        DisplayLocationInfo(latitude, longitude, "null"); // textView 에 표시
 
                         try {
                             // 마지막으로 tracking 한 GPS 값을 가져온다.
@@ -134,9 +134,9 @@ public class LocationSearchActivity extends AppCompatActivity {
                     double longitude = Double.parseDouble(textView_longitude.getText().toString());
                     LatLng markerLocation = new LatLng(latitude, longitude);
 
-                    if (textView_placeName.getText().toString() == "")
+                    if (textView_placeName.getText().toString() == "") {
                         showLocationMarker(markerLocation, "null", range);
-                    else
+                    } else
                         showLocationMarker(markerLocation, textView_placeName.getText().toString(), range);
                 }
 
