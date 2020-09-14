@@ -126,13 +126,12 @@ public class LocationSearchActivity extends AppCompatActivity {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int range, boolean b) {
-                double latitude;
-                double longitude;
 
                 // 현재 지정할 location 값이 있어야만 실행
                 if (textView_latitude.getText().toString() != ""){
-                    LatLng markerLocation = new LatLng(Double.parseDouble(textView_latitude.getText().toString()),
-                            Double.parseDouble(textView_longitude.getText().toString()));
+                    double latitude = Double.parseDouble(textView_latitude.getText().toString());
+                    double longitude = Double.parseDouble(textView_longitude.getText().toString());
+                    LatLng markerLocation = new LatLng(latitude, longitude);
 
                     if (textView_placeName.getText().toString() == "")
                         showLocationMarker(markerLocation, "", range);
