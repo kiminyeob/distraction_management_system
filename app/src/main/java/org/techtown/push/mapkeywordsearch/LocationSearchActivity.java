@@ -76,10 +76,13 @@ public class LocationSearchActivity extends AppCompatActivity {
                         // 소숫점 정리하기
                         double latitude  = LatLng.latitude;
                         double longitude = LatLng.longitude;
+                        LatLng curPoint = new LatLng(latitude, longitude);
 
                         textView_latitude.setText(Double.toString(latitude));
                         textView_longitude.setText(Double.toString(longitude));
                         textView_placeName.setText("");
+
+                        showLocationMarker(curPoint, "null");
 
                         try {
                             // 마지막으로 tracking 한 GPS 값을 가져온다.
