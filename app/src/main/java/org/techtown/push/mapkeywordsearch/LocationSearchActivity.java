@@ -125,8 +125,23 @@ public class LocationSearchActivity extends AppCompatActivity {
 
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                textView_range.setText(Integer.toString(i)+"m");
+            public void onProgressChanged(SeekBar seekBar, int range, boolean b) {
+                double latitude;
+                double longitude;
+
+                // 현재 지정할 location 값이 있어야만 실행
+                if (textView_latitude.getText().toString() != ""){
+                    LatLng markerLocation = new LatLng(Double.parseDouble(textView_latitude.getText().toString()),
+                            Double.parseDouble(textView_longitude.getText().toString()));
+
+                    if (textView_placeName.getText().toString() == "")
+                        showLocationMarker(markerLocation, "", range);
+                    else
+                        showLocationMarker(markerLocation, textView_placeName.getText().toString(), range);
+                }
+
+                textView_range.setText(Integer.toString(range)+"m");
+
             }
 
             @Override
