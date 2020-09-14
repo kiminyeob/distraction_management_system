@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -366,6 +367,7 @@ public class LocationSearchActivity extends AppCompatActivity {
 
     // 거리 계산 메서드
     public double getDistance(double lat , double lng){
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         double distance;
 
         Location locationA = new Location("point A");
@@ -379,15 +381,15 @@ public class LocationSearchActivity extends AppCompatActivity {
 
         distance = Math.round(locationA.distanceTo(locationB)*100)/100.0;
 
-
-
         // 사용자의 위치와 지정된 위치가 일정 거리 이하이면 특정 액션이 수행되는 샘플 코드
         if(distance > sb.getProgress()){
             textView_distance.setTextColor(Color.BLACK);
             textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m");
+            mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
         } else {
             textView_distance.setTextColor(Color.RED);
             textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션 트리거!");
+            mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
         }
         return distance;
     }
