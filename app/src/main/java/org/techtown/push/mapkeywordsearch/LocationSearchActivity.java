@@ -382,12 +382,12 @@ public class LocationSearchActivity extends AppCompatActivity {
 
 
         // 사용자의 위치와 지정된 위치가 일정 거리 이하이면 특정 액션이 수행되는 샘플 코드
-        if(distance > 50){
+        if(distance > sb.getProgress()){
             textView_distance.setTextColor(Color.BLACK);
             textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m");
         } else {
             textView_distance.setTextColor(Color.RED);
-            textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션이 트리거 됩니다!");
+            textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션 트리거!");
         }
         return distance;
     }
