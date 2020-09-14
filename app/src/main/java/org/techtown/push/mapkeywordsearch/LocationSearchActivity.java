@@ -388,7 +388,7 @@ public class LocationSearchActivity extends AppCompatActivity {
             mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
         } else {
             textView_distance.setTextColor(Color.RED);
-            textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션 트리거!");
+            textView_distance.setText("선택한 위치와 현재 나와의 거리: "+(Double.toString(distance))+"m (액션 트리거!)");
             mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
         }
         return distance;
