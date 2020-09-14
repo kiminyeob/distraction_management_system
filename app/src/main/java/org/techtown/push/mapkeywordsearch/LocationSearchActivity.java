@@ -126,7 +126,7 @@ public class LocationSearchActivity extends AppCompatActivity {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                textView_range.setText(Integer.toString(i));
+                textView_range.setText(Integer.toString(i)+"m");
             }
 
             @Override
