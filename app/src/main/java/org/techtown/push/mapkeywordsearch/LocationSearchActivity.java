@@ -12,12 +12,12 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,11 +45,13 @@ public class LocationSearchActivity extends AppCompatActivity {
 
     // user input 및 출력 관련 view
     Button button;
+    SeekBar sb;
     EditText editText;
     TextView textView_placeName;
     TextView textView_latitude;
     TextView textView_longitude;
     TextView textView_distance;
+    TextView textView_range;
 
     //지도 관련 view
     SupportMapFragment mapFragment;
@@ -60,11 +62,14 @@ public class LocationSearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
+
         editText = findViewById(R.id.editText);
         textView_placeName = findViewById(R.id.locationName);
         textView_latitude = findViewById(R.id.latitude);
         textView_longitude = findViewById(R.id.longitude);
         textView_distance = findViewById(R.id.distance);
+        textView_range = findViewById(R.id.range);
+        sb = findViewById(R.id.seekBar);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -84,13 +89,6 @@ public class LocationSearchActivity extends AppCompatActivity {
 
                         showLocationMarker(curPoint, "null");
                         DisplayLocationInfo(latitude, longitude); // textView 에 표시
-
-                        Circle circle = map.addCircle(new CircleOptions()
-                                .center(curPoint)
-                                .radius(100.0)
-                                .strokeColor(Color.RED)
-                                .strokeWidth(1.0f)
-                                .fillColor(0x220000FF));
 
                         try {
                             // 마지막으로 tracking 한 GPS 값을 가져온다.
@@ -123,6 +121,19 @@ public class LocationSearchActivity extends AppCompatActivity {
             BackgroundThreadKaKaoMap thread = new BackgroundThreadKaKaoMap();
             thread.start();
             }
+        });
+
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                textView_range.setText(Integer.toString(i));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
         startLocationService();
@@ -330,6 +341,13 @@ public class LocationSearchActivity extends AppCompatActivity {
                 .title(locationName+"\n")
                 .snippet("GPS로 확인한 위치");
         map.addMarker(myLocationMarker);
+
+        Circle circle = map.addCircle(new CircleOptions()
+                .center(curPoint)
+                .radius(0)
+                .strokeColor(Color.RED)
+                .strokeWidth(1.0f)
+                .fillColor(0x220000FF));
     }
 
     // 거리 계산 메서드
