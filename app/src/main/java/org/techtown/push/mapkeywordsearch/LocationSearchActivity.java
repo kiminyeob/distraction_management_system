@@ -87,7 +87,7 @@ public class LocationSearchActivity extends AppCompatActivity {
                         double longitude = LatLng.longitude;
                         LatLng curPoint = new LatLng(latitude, longitude);
 
-                        showLocationMarker(curPoint, "null");
+                        showLocationMarker(curPoint, "null", sb.getProgress());
                         DisplayLocationInfo(latitude, longitude); // textView 에 표시
 
                         try {
@@ -170,7 +170,7 @@ public class LocationSearchActivity extends AppCompatActivity {
                 String locationName = data.getStringExtra("locationName");
                 LatLng curPoint = new LatLng(Double.parseDouble(y_), Double.parseDouble(x_));
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 15));
-                showLocationMarker(curPoint, locationName);
+                showLocationMarker(curPoint, locationName, sb.getProgress());
                 DisplayLocationInfo(y_, x_, locationName);
             }
         }
@@ -327,7 +327,7 @@ public class LocationSearchActivity extends AppCompatActivity {
     }
 
     // 지도 상에 marker를 표시한다.
-    private void showLocationMarker(LatLng curPoint, String locationName){
+    private void showLocationMarker(LatLng curPoint, String locationName, int range){
         int height =100;
         int width = 100;
         Bitmap b = BitmapFactory.decodeResource(getResources(),R.drawable.mylocation);
@@ -344,7 +344,7 @@ public class LocationSearchActivity extends AppCompatActivity {
 
         Circle circle = map.addCircle(new CircleOptions()
                 .center(curPoint)
-                .radius(0)
+                .radius(range)
                 .strokeColor(Color.RED)
                 .strokeWidth(1.0f)
                 .fillColor(0x220000FF));
