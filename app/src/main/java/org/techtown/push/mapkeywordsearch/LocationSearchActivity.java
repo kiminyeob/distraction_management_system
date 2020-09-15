@@ -90,6 +90,7 @@ public class LocationSearchActivity extends AppCompatActivity {
 
                         showLocationMarker(curPoint, "null", sb.getProgress());
                         DisplayLocationInfo(latitude, longitude, "null"); // textView 에 표시
+                        editText.setText("터치하여 위치 지정");
 
                         try {
                             // 마지막으로 tracking 한 GPS 값을 가져온다.
